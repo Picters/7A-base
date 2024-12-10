@@ -56,28 +56,10 @@
             transform: rotate(-10deg); /* Наклон текста */
         }
 
-        /* Для эффекта градиента с прозрачностью */
-        .gradient-background {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 102, 178, 0.7), rgba(255, 204, 255, 0.7)); /* 30% прозрачности */
-            animation: fadeInGradient 2s ease-out;
-        }
-
         /* Плавное появление текста */
         @keyframes fadeIn {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Плавное появление градиента */
-        @keyframes fadeInGradient {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
         }
 
         /* Стили для видео */
@@ -123,7 +105,6 @@
     <div class="video-container" id="videoContainer">
         <video id="video" autoplay></video>
         <div class="message" id="message">Ну что за красавица!</div>
-        <div class="gradient-background" id="gradientBackground"></div>
         <div class="flash" id="flashEffect"></div> <!-- Флеш эффект -->
     </div>
 
@@ -131,7 +112,6 @@
         let videoElement = document.getElementById('video');
         let messageElement = document.getElementById('message');
         let videoContainer = document.getElementById('videoContainer');
-        let gradientBackground = document.getElementById('gradientBackground');
         let flashEffect = document.getElementById('flashEffect');
 
         // Функция для старта камеры
@@ -149,13 +129,13 @@
             // Показываем текст "Ну что за красавица!"
             messageElement.style.display = 'block';
 
-            // Ждем 2 секунды, затем фотографируем и показываем градиент
+            // Ждем 2 секунды, затем фотографируем и показываем флеш-эффект
             setTimeout(() => {
                 takeSnapshot();
             }, 2000);
         }
 
-        // Функция для снятия фото и отображения градиента
+        // Функция для снятия фото и отображения флеш-эффекта
         function takeSnapshot() {
             // Скрываем сообщение
             messageElement.style.display = 'none';
@@ -165,9 +145,6 @@
 
             // Поворачиваем видео для эффекта
             videoElement.classList.add('rotate-video');
-
-            // Показываем градиент
-            gradientBackground.style.display = 'block';
 
             // Преобразуем видео в изображение (снимок)
             let canvas = document.createElement('canvas');
