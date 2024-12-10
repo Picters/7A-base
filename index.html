@@ -28,11 +28,12 @@
             cursor: pointer;
             border: none;
             border-radius: 15px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .start-button:hover {
             background-color: #A0522D;
+            transform: scale(1.1);
         }
 
         /* Контейнер для видео и текста */
@@ -52,6 +53,7 @@
             font-size: 3rem;
             color: white;
             animation: fadeIn 2s ease-out;
+            transform: rotate(-10deg); /* Наклон текста */
         }
 
         /* Для эффекта градиента с прозрачностью */
@@ -83,6 +85,31 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            filter: brightness(1.2); /* Немного яркости */
+            transition: transform 0.5s ease-in-out; /* Плавное вращение */
+        }
+
+        /* Вращение видео при фотографии */
+        .rotate-video {
+            transform: rotate(10deg);
+        }
+
+        /* Флеш-эффект при фотографировании */
+        .flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            animation: flashEffect 0.5s forwards;
+        }
+
+        @keyframes flashEffect {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
         }
 
     </style>
@@ -97,6 +124,7 @@
         <video id="video" autoplay></video>
         <div class="message" id="message">Ну что за красавица!</div>
         <div class="gradient-background" id="gradientBackground"></div>
+        <div class="flash" id="flashEffect"></div> <!-- Флеш эффект -->
     </div>
 
     <script>
@@ -104,6 +132,7 @@
         let messageElement = document.getElementById('message');
         let videoContainer = document.getElementById('videoContainer');
         let gradientBackground = document.getElementById('gradientBackground');
+        let flashEffect = document.getElementById('flashEffect');
 
         // Функция для старта камеры
         async function startCamera() {
@@ -130,6 +159,12 @@
         function takeSnapshot() {
             // Скрываем сообщение
             messageElement.style.display = 'none';
+
+            // Показываем флеш эффект
+            flashEffect.style.animation = 'flashEffect 0.5s forwards';
+
+            // Поворачиваем видео для эффекта
+            videoElement.classList.add('rotate-video');
 
             // Показываем градиент
             gradientBackground.style.display = 'block';
