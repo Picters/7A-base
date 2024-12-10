@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Камера и Фото</title>
+    <style>
+        /* Основные стили */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #FFD700;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        /* Кнопка для старта */
+        .start-button {
+            padding: 20px 40px;
+            background-color: #8B4513;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .start-button:hover {
+            background-color: #A0522D;
+        }
+
+        /* Контейнер для видео и текста */
+        .video-container {
+            display: none;
+            text-align: center;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Текст "Ну что за красавица!" */
+        .message {
+            position: absolute;
+            top: 30%;
+            width: 100%;
+            font-size: 3rem;
+            color: white;
+            animation: fadeIn 2s ease-out;
+        }
+
+        /* Для эффекта градиента */
+        .gradient-background {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff66b2, #ffccff);
+            animation: fadeInGradient 2s ease-out;
+        }
+
+        /* Плавное появление текста */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Плавное появление градиента */
+        @keyframes fadeInGradient {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Стили для видео */
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Кнопка для запуска камеры -->
+    <button class="start-button" onclick="startCamera()">Ну что за красавица?!</button>
+
+    <!-- Контейнер с видео и текстом -->
+    <div class="video-container" id="videoContainer">
+        <video id="video" autoplay></video>
+        <div class="message" id="message">Ну что за красавица!</div>
+        <div class="gradient-background" id="gradientBackground"></div>
+    </div>
+
+    <script>
+        let videoElement = document.getElementById('video');
+        let messageElement = document.getElementById('message');
+        let videoContainer = document.getElementById('videoContainer');
+        let gradientBackground = document.getElementById('gradientBackground');
+
+        // Функция для старта камеры
+        async function startCamera() {
+            // Скрываем кнопку
+            document.querySelector('.start-button').style.display = 'none';
+
+            // Показываем контейнер с видео и текстом
+            videoContainer.style.display = 'block';
+
+            // Получаем доступ к фронтальной камере
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+            videoElement.srcObject = stream;
+
+            // Показываем текст "Ну что за красавица!"
+            messageElement.style.display = 'block';
+
+            // Ждем 2 секунды, затем фотографируем и показываем градиент
+            setTimeout(() => {
+                takeSnapshot();
+            }, 2000);
+        }
+
+        // Функция для снятия фото и отображения градиента
+        function takeSnapshot() {
+            // Скрываем сообщение
+            messageElement.style.display = 'none';
+
+            // Показываем градиент
+            gradientBackground.style.display = 'block';
+
+            // Преобразуем видео в изображение (снимок)
+            let canvas = document.createElement('canvas');
+            let ctx = canvas.getContext('2d');
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+            // Останавливаем камеру
+            let stream = videoElement.srcObject;
+            let tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+
+            // Закрываем видео
+            videoElement.srcObject = null;
+
+            // Вы можете сохранить или обработать фото дальше, например, через canvas.toDataURL()
+        }
+    </script>
+
+</body>
+</html>
